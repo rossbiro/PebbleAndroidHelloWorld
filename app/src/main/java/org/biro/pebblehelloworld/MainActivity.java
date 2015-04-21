@@ -2,15 +2,18 @@ package org.biro.pebblehelloworld;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.biro.pebble.Pebble;
+import org.biro.pebble.PebbleException;
 import org.biro.pebble.PebbleTextLayer;
 import org.biro.pebble.PebbleWindow;
 
 
 public class MainActivity extends ActionBarActivity {
+    private static final String TAG = "PebbleHW:MainActivity: ";
 
     Pebble mPebble;
     PebbleWindow mPebbleWindow;
@@ -21,19 +24,23 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPebble = new Pebble();
-        mPebble.setUUID("9312d524-6e77-47e4-96ed-e67bd11ce1d5");
-        mPebble.registerHandlers(getApplicationContext());
+        try {
+            mPebble = new Pebble();
+            mPebble.setPebbleAppUUID("9312d524-6e77-47e4-96ed-e67bd11ce1d5");
+            mPebble.registerHandlers(getApplicationContext());
 
-        // Set up the pebbles stuff and turn it on.
-        mPebbleWindow = PebbleWindow.getRootWindow();
-        mPebbleTextLayer = new PebbleTextLayer();
+            // Set up the pebbles stuff and turn it on.
+            mPebbleWindow = PebbleWindow.getRootWindow();
+            mPebbleTextLayer = new PebbleTextLayer();
 
-        mPebbleWindow.setParent(mPebble);
-        mPebbleTextLayer.setText("Hello, World!");
+            mPebbleWindow.setParent(mPebble);
+            mPebbleTextLayer.setText("Hello, World!");
 
-        mPebbleWindow.addLayer(mPebbleTextLayer);
-        mPebbleWindow.update(getApplicationContext());
+            mPebbleWindow.addLayer(mPebbleTextLayer);
+            mPebbleWindow.update(getApplicationContext());
+        } catch (PebbleException pe) {
+            Log.e(TAG, "Caught Pebble Exception" + pe);
+        }
     }
 
     @Override
