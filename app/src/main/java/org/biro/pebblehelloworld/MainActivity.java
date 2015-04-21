@@ -22,17 +22,17 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         mPebble = new Pebble();
+        mPebble.setUUID("9312d524-6e77-47e4-96ed-e67bd11ce1d5");
         mPebble.registerHandlers(getApplicationContext());
 
         // Set up the pebbles stuff and turn it on.
-        mPebbleWindow = new PebbleWindow();
+        mPebbleWindow = PebbleWindow.getRootWindow();
         mPebbleTextLayer = new PebbleTextLayer();
 
         mPebbleWindow.setParent(mPebble);
         mPebbleTextLayer.setText("Hello, World!");
 
         mPebbleWindow.addLayer(mPebbleTextLayer);
-        mPebbleWindow.push(getApplicationContext());
         mPebbleWindow.update(getApplicationContext());
     }
 
