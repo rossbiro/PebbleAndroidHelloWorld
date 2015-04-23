@@ -63,6 +63,8 @@ public class Pebble {
     public static final int STATUS_STARTED = 2;
     public static final int STATUS_STOPPED = 3;
 
+    public static final int ROOT_WINDOW_HANDLE = 0;
+
     public static final int ENOMEM = 1;
     public static final int ENOWINDOW = 2;
     public static final int ENOLAYER = 3;
@@ -115,7 +117,7 @@ public class Pebble {
                             return;
                         }
                         ack(ctx, ptid);
-                        int tid = (int)pebbleDictionary.getUnsignedIntegerAsLong(KEY_TRANSACTION_ID).intValue();
+                        int tid = pebbleDictionary.getUnsignedIntegerAsLong(KEY_TRANSACTION_ID).intValue();
                         PacketInfo info = getPebbleFinished(tid);
                         removeInflight(tid);
                         if (info != null && info.w != null) {

@@ -43,11 +43,11 @@ public class PebbleWindow {
     private final int STATE_PUSH = 2;
 
 
-    private final Stack<Integer> stateStack = new Stack<Integer>();
+    private final Stack<Integer> stateStack = new Stack<>();
 
     private int wh = -1;
     private Pebble parent;
-    private List<PebbleLayer> layers = new ArrayList<PebbleLayer>();
+    private List<PebbleLayer> layers = new ArrayList<>();
 
     // get's a window handle.
     private void connect(Context ctx) {
@@ -65,7 +65,6 @@ public class PebbleWindow {
                         if (status == Pebble.STATUS_ERR) {
                             Log.e(TAG, "Call Failed" + res.getUnsignedIntegerAsLong(Pebble.KEY_ERROR_CODE));
                             handleError(res.getUnsignedIntegerAsLong(Pebble.KEY_ERROR_CODE));
-                            return;
                         } else {
                             wh = res.getUnsignedIntegerAsLong(Pebble.KEY_WINDOW_ID).intValue();
                             updateStatus(ctx);
@@ -80,20 +79,30 @@ public class PebbleWindow {
             if (stateStack.isEmpty()) {
                 return STATE_NONE;
             }
-            return stateStack.pop().intValue();
+            return stateStack.pop();
         }
     }
 
     private void pushState(int state) {
         synchronized (stateStack) {
-            stateStack.push(Integer.valueOf(state));
+            stateStack.push(state);
         }
     }
 
     public void addState(int state) {
         synchronized (stateStack) {
-            stateStack.add(Integer.valueOf(state));
+            stateStack.add(state);
         }
+    }
+
+    private static PebbleWindow root = null;
+
+    synchronized public static PebbleWindow getRootWindow() {
+        if (root == null) {
+            root = new PebbleWindow();
+            root.wh = Pebble.ROOT_WINDOW_HANDLE;
+        }
+        return root;
     }
 
     private void handleError(long error) {
@@ -107,19 +116,19 @@ public class PebbleWindow {
         switch (cs) {
             case STATE_NONE:
                 //nothing to do.
-                return;
+                break;
 
             case STATE_UPDATING:
                 update(ctx);
-                return;
+                break;
 
             case STATE_PUSH:
                 push(ctx);
-                return;
+                break;
 
             default:
                 Log.e(TAG, "Unknown state");
-                return;
+                break;
         }
 
     }
